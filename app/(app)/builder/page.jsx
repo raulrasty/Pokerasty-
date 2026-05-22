@@ -1,11 +1,32 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 
-export default function BuilderPage() {
+const typeColors = {
+  fire: "bg-orange-100 text-orange-700",
+  water: "bg-blue-100 text-blue-700",
+  grass: "bg-green-100 text-green-700",
+  electric: "bg-yellow-100 text-yellow-700",
+  psychic: "bg-pink-100 text-pink-700",
+  ice: "bg-cyan-100 text-cyan-700",
+  dragon: "bg-indigo-100 text-indigo-700",
+  dark: "bg-gray-800 text-white",
+  fairy: "bg-pink-200 text-pink-800",
+  fighting: "bg-red-100 text-red-700",
+  poison: "bg-purple-100 text-purple-700",
+  ground: "bg-amber-100 text-amber-700",
+  flying: "bg-sky-100 text-sky-700",
+  bug: "bg-lime-100 text-lime-700",
+  rock: "bg-stone-100 text-stone-700",
+  ghost: "bg-violet-100 text-violet-700",
+  steel: "bg-slate-100 text-slate-700",
+  normal: "bg-gray-100 text-gray-700",
+}
+
+function BuilderContent() {
   const searchParams = useSearchParams()
   const editingId = searchParams.get("teamId")
 
@@ -84,31 +105,9 @@ export default function BuilderPage() {
     setSaving(false)
   }
 
-  const typeColors = {
-    fire: "bg-orange-100 text-orange-700",
-    water: "bg-blue-100 text-blue-700",
-    grass: "bg-green-100 text-green-700",
-    electric: "bg-yellow-100 text-yellow-700",
-    psychic: "bg-pink-100 text-pink-700",
-    ice: "bg-cyan-100 text-cyan-700",
-    dragon: "bg-indigo-100 text-indigo-700",
-    dark: "bg-gray-800 text-white",
-    fairy: "bg-pink-200 text-pink-800",
-    fighting: "bg-red-100 text-red-700",
-    poison: "bg-purple-100 text-purple-700",
-    ground: "bg-amber-100 text-amber-700",
-    flying: "bg-sky-100 text-sky-700",
-    bug: "bg-lime-100 text-lime-700",
-    rock: "bg-stone-100 text-stone-700",
-    ghost: "bg-violet-100 text-violet-700",
-    steel: "bg-slate-100 text-slate-700",
-    normal: "bg-gray-100 text-gray-700",
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
 
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -123,10 +122,7 @@ export default function BuilderPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* Panel izquierdo — búsqueda */}
         <div className="lg:col-span-2 space-y-6">
-
-          {/* Buscador */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Buscar Pokémon</h2>
             <form onSubmit={handleSearch} className="flex gap-3">
@@ -146,7 +142,6 @@ export default function BuilderPage() {
             </form>
           </div>
 
-          {/* Resultados */}
           {loading && (
             <div className="text-center py-10 text-gray-400">Buscando...</div>
           )}
@@ -165,28 +160,17 @@ export default function BuilderPage() {
                     }`}
                     onClick={() => !inTeam && addToTeam(pokemon)}
                   >
-                    <Image
-                      src={pokemon.image}
-                      alt={pokemon.name}
-                      width={80}
-                      height={80}
-                      className="mx-auto"
-                    />
+                    <Image src={pokemon.image} alt={pokemon.name} width={80} height={80} className="mx-auto" />
                     <p className="text-sm font-medium text-gray-800 capitalize mt-2">{pokemon.name}</p>
                     <div className="flex gap-1 justify-center mt-2 flex-wrap">
                       {pokemon.types.map(type => (
-                        <span
-                          key={type}
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColors[type] || "bg-gray-100 text-gray-700"}`}
-                        >
+                        <span key={type} className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColors[type] || "bg-gray-100 text-gray-700"}`}>
                           {type}
                         </span>
                       ))}
                     </div>
                     {!inTeam && team.length < 6 && (
-                      <button className="mt-3 text-xs text-red-600 font-medium hover:text-red-700">
-                        + Añadir
-                      </button>
+                      <button className="mt-3 text-xs text-red-600 font-medium hover:text-red-700">+ Añadir</button>
                     )}
                   </div>
                 )
@@ -195,7 +179,6 @@ export default function BuilderPage() {
           )}
         </div>
 
-        {/* Panel derecho — equipo */}
         <div className="space-y-4">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -203,7 +186,6 @@ export default function BuilderPage() {
               <span className="ml-2 text-sm font-normal text-gray-400">({team.length}/6)</span>
             </h2>
 
-            {/* Nombre del equipo */}
             <input
               type="text"
               value={teamName}
@@ -212,21 +194,13 @@ export default function BuilderPage() {
               placeholder="Nombre del equipo"
             />
 
-            {/* Slots del equipo */}
             <div className="space-y-2 mb-6">
               {team.length === 0 ? (
-                <p className="text-gray-400 text-sm text-center py-4">
-                  Añade Pokémon desde la búsqueda
-                </p>
+                <p className="text-gray-400 text-sm text-center py-4">Añade Pokémon desde la búsqueda</p>
               ) : (
                 team.map(pokemon => (
                   <div key={pokemon.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 group">
-                    <Image
-                      src={pokemon.image}
-                      alt={pokemon.name}
-                      width={48}
-                      height={48}
-                    />
+                    <Image src={pokemon.image} alt={pokemon.name} width={48} height={48} />
                     <span className="flex-1 text-sm font-medium text-gray-700 capitalize">{pokemon.name}</span>
                     <button
                       onClick={() => removeFromTeam(pokemon.id)}
@@ -238,7 +212,6 @@ export default function BuilderPage() {
                 ))
               )}
 
-              {/* Slots vacíos */}
               {Array.from({ length: 6 - team.length }).map((_, i) => (
                 <div key={i} className="flex items-center gap-3 p-2 rounded-lg border border-dashed border-gray-200">
                   <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 text-lg">?</div>
@@ -258,5 +231,13 @@ export default function BuilderPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BuilderPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-gray-400">Cargando...</div>}>
+      <BuilderContent />
+    </Suspense>
   )
 }
