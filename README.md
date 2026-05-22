@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PokéRasty
 
-## Getting Started
+Aplicación web para crear, gestionar y comparar equipos Pokémon. Desarrollada con Next.js como proyecto de portfolio.
 
-First, run the development server:
+🌐 **Demo:** [pokerasty-calf.vercel.app](https://pokerasty-calf.vercel.app)
 
+---
+
+## Capturas de pantalla
+
+### Página de inicio
+![Home](screenshots/home.png)
+
+### Login
+![Login](screenshots/login.png)
+
+### Dashboard de equipos
+![Dashboard](screenshots/dashboard.png)
+
+### Builder de equipos
+![Builder](screenshots/builder.png)
+
+### Análisis de debilidades
+![Team](screenshots/team.png)
+
+### Comparación de equipos
+![Compare](screenshots/compare.png)
+![Compare detalle](screenshots/compare2.png)
+
+---
+
+## Características
+
+- **Autenticación** — Login con Google OAuth
+- **Crear equipos** — Busca entre más de 1000 Pokémon y construye tu equipo de 6
+- **Editar y borrar equipos** — Gestión completa de equipos
+- **Análisis de debilidades** — Debilidades, resistencias e inmunidades por Pokémon y del equipo global
+- **Comparar equipos** — Tabla de matchups con multiplicadores de daño entre dos equipos
+- **Página pública** — Cada equipo tiene una URL pública para compartir
+- **Diseño responsive** — Adaptado para escritorio y móvil
+
+---
+
+## Stack tecnológico
+
+| Capa | Tecnología |
+|------|-----------|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19 + Tailwind CSS 4 |
+| Autenticación | Auth.js v5 (Google OAuth) |
+| ORM | Prisma 7 |
+| Base de datos | Neon (PostgreSQL) |
+| API externa | PokeAPI |
+| Despliegue | Vercel |
+
+---
+
+## Estructura del proyecto
+pokerasty/
+├── app/
+│   ├── (app)/
+│   │   ├── builder/       # Constructor de equipos
+│   │   └── dashboard/     # Panel de equipos del usuario
+│   ├── (auth)/
+│   │   └── login/         # Página de login
+│   ├── api/
+│   │   ├── auth/          # Endpoints de autenticación
+│   │   ├── compare/       # API de comparación de equipos
+│   │   ├── pokemon/       # API de búsqueda de Pokémon
+│   │   └── teams/         # API CRUD de equipos
+│   ├── compare/           # Página de comparación
+│   └── team/[slug]/       # Página pública del equipo
+├── components/
+│   └── Navbar.jsx
+├── lib/
+│   ├── auth.js            # Configuración de Auth.js
+│   ├── pokeapi.js         # Cliente de PokeAPI
+│   ├── prisma.js          # Cliente de Prisma
+│   └── weakness.js        # Lógica de tipos y debilidades
+└── prisma/
+└── schema.prisma
+
+---
+
+## Instalación local
+
+### Requisitos
+- Node.js 18+
+- Cuenta en [Neon](https://neon.tech)
+- Credenciales de Google OAuth
+
+### Pasos
+
+1. Clona el repositorio
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/raulrasty/Pokerasty-.git
+cd Pokerasty-
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Instala las dependencias
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Crea el archivo `.env` con tus variables
+```env
+AUTH_SECRET=tu_secret
+AUTH_GOOGLE_ID=tu_google_id
+AUTH_GOOGLE_SECRET=tu_google_secret
+NEXTAUTH_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Configura `prisma.config.ts` con tu `DATABASE_URL` de Neon
 
-## Learn More
+5. Genera el cliente de Prisma
+```bash
+npx prisma generate
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. Arranca el servidor
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Autor
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Raúl Álvarez — [GitHub](https://github.com/raulrasty)
