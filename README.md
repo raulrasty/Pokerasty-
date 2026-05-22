@@ -37,7 +37,6 @@ Aplicación web para crear, gestionar y comparar equipos Pokémon. Desarrollada 
 - **Análisis de debilidades** — Debilidades, resistencias e inmunidades por Pokémon y del equipo global
 - **Comparar equipos** — Tabla de matchups con multiplicadores de daño entre dos equipos
 - **Página pública** — Cada equipo tiene una URL pública para compartir
-- **Diseño responsive** — Adaptado para escritorio y móvil
 
 ---
 
@@ -56,6 +55,8 @@ Aplicación web para crear, gestionar y comparar equipos Pokémon. Desarrollada 
 ---
 
 ## Estructura del proyecto
+
+```
 pokerasty/
 ├── app/
 │   ├── (app)/
@@ -78,7 +79,8 @@ pokerasty/
 │   ├── prisma.js          # Cliente de Prisma
 │   └── weakness.js        # Lógica de tipos y debilidades
 └── prisma/
-└── schema.prisma
+    └── schema.prisma
+```
 
 ---
 
