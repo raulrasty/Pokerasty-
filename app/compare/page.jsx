@@ -3,6 +3,27 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
+const tipoES = {
+  fire: "Fuego",
+  water: "Agua",
+  grass: "Planta",
+  electric: "Eléctrico",
+  psychic: "Psíquico",
+  ice: "Hielo",
+  dragon: "Dragón",
+  dark: "Siniestro",
+  fairy: "Hada",
+  fighting: "Lucha",
+  poison: "Veneno",
+  ground: "Tierra",
+  flying: "Volador",
+  bug: "Bicho",
+  rock: "Roca",
+  ghost: "Fantasma",
+  steel: "Acero",
+  normal: "Normal",
+}
+
 function getColorClass(multiplier) {
   if (multiplier === 0) return "bg-gray-500 text-white"
   if (multiplier <= 0.5) return "bg-green-500 text-white"
@@ -156,10 +177,10 @@ export default function ComparePage() {
           }`}>
             <p className="font-semibold text-gray-800 text-lg">
               {avgGlobal < 0.8
-                ? "✅ Tu equipo resiste bien al rival"
+                ? "Tu equipo resiste bien al rival"
                 : avgGlobal > 1.5
-                ? "❌ Tu equipo tiene serios problemas contra este rival"
-                : "⚠️ Matchup equilibrado"}
+                ? "Tu equipo tiene serios problemas contra este rival"
+                : "Matchup equilibrado"}
             </p>
             <p className="text-sm text-gray-600 mt-1">
               Media de daño recibido: <strong>x{Math.round(avgGlobal * 100) / 100}</strong> —
@@ -218,7 +239,7 @@ export default function ComparePage() {
                               key={k}
                               className={`text-xs font-bold rounded px-2 py-0.5 mb-1 ${getColorClass(t.mult)}`}
                             >
-                              {t.type}: x{t.mult}
+                              {tipoES[t.type] || t.type}: x{t.mult}
                             </div>
                           ))}
                         </td>

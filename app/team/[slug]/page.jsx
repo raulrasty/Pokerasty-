@@ -1,8 +1,18 @@
 import prisma from "@/lib/prisma"
 import { getPokemon } from "@/lib/pokeapi"
 import { getTeamWeaknesses, getTypeDefenses } from "@/lib/weakness"
+import { auth } from "@/lib/auth"
+import { redirect } from "next/navigation"
 import { notFound } from "next/navigation"
 import Image from "next/image"
+
+const tipoES = {
+  fire: "Fuego", water: "Agua", grass: "Planta", electric: "Eléctrico",
+  psychic: "Psíquico", ice: "Hielo", dragon: "Dragón", dark: "Siniestro",
+  fairy: "Hada", fighting: "Lucha", poison: "Veneno", ground: "Tierra",
+  flying: "Volador", bug: "Bicho", rock: "Roca", ghost: "Fantasma",
+  steel: "Acero", normal: "Normal",
+}
 
 const typeColors = {
   fire: "bg-orange-100 text-orange-700",
@@ -26,6 +36,9 @@ const typeColors = {
 }
 
 export default async function TeamPage({ params }) {
+  const session = await auth()
+  if (!session) redirect("/login")
+
   const { slug } = await params
 
   const team = await prisma.team.findUnique({
@@ -67,18 +80,15 @@ export default async function TeamPage({ params }) {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
 
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">{team.name}</h1>
         <p className="text-gray-500 mt-1">Equipo de <span className="font-medium text-gray-700">{team.user.name}</span></p>
       </div>
 
-      {/* Grid de Pokémon */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {pokemonWithDefenses.map(p => (
           <div key={p.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
 
-            {/* Header tarjeta */}
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-5 py-4 flex items-center gap-4">
               <Image src={p.image} alt={p.name} width={80} height={80} />
               <div>
@@ -86,14 +96,13 @@ export default async function TeamPage({ params }) {
                 <div className="flex gap-1 mt-1">
                   {p.types.map(type => (
                     <span key={type} className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColors[type] || "bg-gray-100 text-gray-700"}`}>
-                      {type}
+                      {tipoES[type] || type}
                     </span>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Debilidades */}
             <div className="px-5 py-4 space-y-3">
               {p.weakTo.length > 0 && (
                 <div>
@@ -101,7 +110,7 @@ export default async function TeamPage({ params }) {
                   <div className="flex flex-wrap gap-1">
                     {p.weakTo.map(([type, m]) => (
                       <span key={type} className="text-xs bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded-full">
-                        {type} x{m}
+                        {tipoES[type] || type} x{m}
                       </span>
                     ))}
                   </div>
@@ -114,7 +123,7 @@ export default async function TeamPage({ params }) {
                   <div className="flex flex-wrap gap-1">
                     {p.resistantTo.map(([type, m]) => (
                       <span key={type} className="text-xs bg-green-50 text-green-600 border border-green-200 px-2 py-0.5 rounded-full">
-                        {type} x{m}
+                        {tipoES[type] || type} x{m}
                       </span>
                     ))}
                   </div>
@@ -127,7 +136,7 @@ export default async function TeamPage({ params }) {
                   <div className="flex flex-wrap gap-1">
                     {p.immuneTo.map(([type]) => (
                       <span key={type} className="text-xs bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full">
-                        {type}
+                        {tipoES[type] || type}
                       </span>
                     ))}
                   </div>
@@ -138,7 +147,6 @@ export default async function TeamPage({ params }) {
         ))}
       </div>
 
-      {/* Análisis global */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Análisis global del equipo</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -149,8 +157,8 @@ export default async function TeamPage({ params }) {
                 count > 0 ? "bg-red-50 border border-red-100" : "bg-green-50 border border-green-100"
               }`}
             >
-              <span className={`text-sm font-medium capitalize ${typeColors[type]?.includes("text") ? "" : ""} text-gray-700`}>
-                {type}
+              <span className="text-sm font-medium text-gray-700">
+                {tipoES[type] || type}
               </span>
               <span className={`text-sm font-bold ${count > 0 ? "text-red-500" : "text-green-600"}`}>
                 {count > 0 ? `${count} débiles` : `${Math.abs(count)} resisten`}

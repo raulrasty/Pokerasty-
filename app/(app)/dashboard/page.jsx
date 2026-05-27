@@ -9,14 +9,13 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/api/teams")
-      .then(res => res.json())
-      .then(data => {
-        setTeams(data)
-        setLoading(false)
-      })
-  }, [])
-
+  fetch("/api/teams")
+    .then(res => res.json())
+    .then(data => {
+      setTeams(Array.isArray(data) ? data : [])
+      setLoading(false)
+    })
+}, [])
   async function deleteTeam(id) {
     if (!confirm("¿Seguro que quieres borrar este equipo?")) return
     await fetch(`/api/teams/${id}`, { method: "DELETE" })
@@ -53,7 +52,7 @@ export default function DashboardPage() {
         <div className="text-center py-20 text-gray-400">Cargando equipos...</div>
       ) : teams.length === 0 ? (
         <div className="text-center py-20">
-          <div className="text-6xl mb-4">⚡</div>
+          <div className="text-6xl mb-4"></div>
           <h2 className="text-xl font-semibold text-gray-700 mb-2">No tienes equipos todavía</h2>
           <p className="text-gray-400 mb-6">Crea tu primer equipo y empieza a competir</p>
           <Link
