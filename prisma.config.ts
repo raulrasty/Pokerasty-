@@ -1,7 +1,7 @@
 import path from "path"
 import { defineConfig } from "prisma/config"
 import * as dotenv from "dotenv"
-import { PrismaNeon } from "@prisma/adapter-neon"
+
 
 dotenv.config({ path: ".env" })
 
