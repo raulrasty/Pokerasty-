@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 const tipoES = {
   fire: "Fuego",
@@ -34,6 +36,9 @@ function getColorClass(multiplier) {
 }
 
 export default function ComparePage() {
+  const router = useRouter()
+  const { status } = useSession()
+
   const [myTeams, setMyTeams] = useState([])
   const [team1Slug, setTeam1Slug] = useState("")
   const [team2Slug, setTeam2Slug] = useState("")
@@ -44,10 +49,17 @@ export default function ComparePage() {
   const [error, setError] = useState("")
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login")
+    }
+  }, [status, router])
+
+  useEffect(() => {
+    if (status !== "authenticated") return
     fetch("/api/teams")
       .then(res => res.json())
-      .then(data => setMyTeams(data))
-  }, [])
+      .then(data => setMyTeams(Array.isArray(data) ? data : []))
+  }, [status])
 
   async function compare() {
     const slug2 = useCustom ? team2Custom.trim() : team2Slug
@@ -71,6 +83,10 @@ export default function ComparePage() {
   const avgGlobal = result
     ? result.summary.reduce((a, b) => a + b.avg, 0) / result.summary.length
     : null
+
+  if (status === "loading" || status === "unauthenticated") {
+    return <div className="p-10 text-gray-400 text-center">Cargando...</div>
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">

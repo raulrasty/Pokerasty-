@@ -99,7 +99,7 @@ export default function DashboardPage() {
                   href={`/team/${team.slug}`}
                   className="text-sm text-red-600 font-medium hover:text-red-700 transition-colors"
                 >
-                  Ver equipo →
+                  Ver equipo
                 </Link>
                 <div className="flex gap-2">
                   <Link
